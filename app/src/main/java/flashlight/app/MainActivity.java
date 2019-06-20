@@ -21,7 +21,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        try {
+            getSupportActionBar().hide(); //removes the top title bar
+        } catch (NullPointerException e) {
+            // ignore as title bar was already removed
+        }
 
         imageButton = findViewById(R.id.imageButton4);
         imageButton.setOnClickListener(new SwitchListener());
@@ -35,7 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void initialize() throws CameraAccessException {
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-        hasFlash = cameraManager.getCameraCharacteristics("0").get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+        try {
+            hasFlash = cameraManager.getCameraCharacteristics("0").get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+        } catch (NullPointerException e) {
+            hasFlash = false;
+        }
         flashState = false;
         if (!hasFlash) {
             displayFlashNotAvailableMessage();
